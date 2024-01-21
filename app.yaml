@@ -1,6 +1,6 @@
 runtime: nodejs20
 env: standard
-service: aionionbev1
+service: aionionbe
 env_variables:
   DB_URI: $DB_URI
   JWT_SECRET: $JWT_SECRET
