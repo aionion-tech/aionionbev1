@@ -1,7 +1,7 @@
-import { NextFunction, Request, Response } from "express";
 import { WorkspaceModel } from "../models/Workspace.model";
 import { WorkspaceUserModel } from "../models/WorkspaceUser.model";
 import { UserRoles } from "../enums/UserRoles.enum";
+import { NextFunction, Request, Response } from "express";
 
 export const createWorkspace = async (
   req: Request,
@@ -9,17 +9,17 @@ export const createWorkspace = async (
   next: NextFunction
 ) => {
   try {
-    const { userid } = req.headers;
+    const { userId } = req;
     const { name } = req.body;
 
     const workspace = await WorkspaceModel.create({
       name,
-      owner: parseInt(userid as string),
+      owner: userId,
     });
 
     await WorkspaceUserModel.create({
       workspace: workspace.id,
-      user: parseInt(userid as string),
+      user: userId,
       role: UserRoles.OWNER,
     });
 

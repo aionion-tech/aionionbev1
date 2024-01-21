@@ -7,7 +7,7 @@ import { DatasetModel } from "../models/Dataset.model";
 import { WorkspaceUserModel } from "../models/WorkspaceUser.model";
 import { ProjectUserModel } from "../models/ProjectUser.model";
 
-export const register = async (
+export const signup = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -35,7 +35,7 @@ export const register = async (
   }
 };
 
-export const login = async (
+export const signin = async (
   req: Request,
   res: Response,
   next: NextFunction

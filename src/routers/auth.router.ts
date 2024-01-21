@@ -1,16 +1,16 @@
 import { Router } from "express";
-import { login, register, verifyToken } from "../controllers/auth.controller";
+import { signin, signup, verifyToken } from "../controllers/auth.controller";
 import { validate } from "../middlewares/validate";
-import { regiserSchema } from "../middlewares/schemas/register.schema";
-import { loginSchema } from "../middlewares/schemas/login.schema";
+import { signupSchema } from "../middlewares/schemas/signup.schema";
+import { signinSchema } from "../middlewares/schemas/signin.schema";
 
 const router = Router();
 
-// /api/v1/auth/register
-router.post("/register", validate(regiserSchema), register);
+// /api/v1/auth/signup
+router.post("/signup", validate(signupSchema), signup);
 
 // /api/v1/auth/login
-router.post("/login", validate(loginSchema), login);
+router.post("/signin", validate(signinSchema), signin);
 
 // /api/v1/auth/verify
 router.post("/verify", verifyToken);

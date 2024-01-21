@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { DatasetModel } from "../models/Dataset.model";
+import { ProjectUserModel } from "../models/ProjectUser.model";
+import { WorkspaceUserModel } from "../models/WorkspaceUser.model";
 
 export const createDataset = async (
   req: Request,
@@ -7,12 +9,32 @@ export const createDataset = async (
   next: NextFunction
 ) => {
   try {
-    const { name, workspace, project } = req.body;
+    const { userId } = req;
+    const { workspaceId, projectId } = req.params;
+    const { name } = req.body;
+
+    const workspaceUser = await WorkspaceUserModel.findOne({
+      where: {
+        workspace: parseInt(workspaceId),
+        user: userId,
+      },
+    });
+
+    if (!workspaceUser) throw new Error("Workspace not found");
+
+    const projectUser = await ProjectUserModel.findOne({
+      where: {
+        project: parseInt(projectId),
+        user: userId,
+      },
+    });
+
+    if (!projectUser) throw new Error("Project not found");
 
     const dataset = await DatasetModel.create({
       name,
-      workspace,
-      project,
+      workspace: parseInt(workspaceId),
+      project: parseInt(projectId),
     });
 
     res.status(201).json({
@@ -20,6 +42,7 @@ export const createDataset = async (
       message: "Dataset created",
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };

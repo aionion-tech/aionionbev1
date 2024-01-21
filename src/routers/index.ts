@@ -3,6 +3,7 @@ import authRouter from "./auth.router";
 import workspaceRouter from "./workspace.router";
 import projectRouter from "./project.router";
 import datasetRouter from "./dataset.router";
+import { auth } from "../middlewares/auth.middleware";
 
 const router = Router();
 
@@ -10,12 +11,12 @@ const router = Router();
 router.use("/auth", authRouter);
 
 // /api/v1/workspace
-router.use("/workspace", workspaceRouter);
+router.use("/workspace", auth, workspaceRouter);
 
 // /api/v1/project
-router.use("/project", projectRouter);
+router.use("/project", auth, projectRouter);
 
 // /api/v1/dataset
-router.use("/dataset", datasetRouter);
+router.use("/dataset", auth, datasetRouter);
 
 export default router;

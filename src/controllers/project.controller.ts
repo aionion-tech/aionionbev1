@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { ProjectModel } from "../models/Project.model";
 import { ProjectUserModel } from "../models/ProjectUser.model";
 import { UserRoles } from "../enums/UserRoles.enum";
+import { WorkspaceUserModel } from "../models/WorkspaceUser.model";
 
 export const createProject = async (
   req: Request,
@@ -9,28 +10,33 @@ export const createProject = async (
   next: NextFunction
 ) => {
   try {
-    const { userid } = req.headers;
-
-    const workspaceId = req.params.workspaceId;
-
+    const { userId } = req;
+    const { workspaceId } = req.params;
     const { name } = req.body;
 
-    console.log(userid, name, workspaceId);
+    const WorkspaceUser = await WorkspaceUserModel.findOne({
+      where: {
+        workspace: parseInt(workspaceId),
+        user: userId,
+      },
+    });
 
-    // const project = await ProjectModel.create({
-    //   name,
-    //   workspace,
-    // });
+    if (!WorkspaceUser) throw new Error("Workspace not found");
 
-    // await ProjectUserModel.create({
-    //   workspace,
-    //   project: project.id,
-    //   role: UserRoles.OWNER,
-    //   user: parseInt(userid as string),
-    // });
+    const project = await ProjectModel.create({
+      name,
+      workspace: parseInt(workspaceId),
+    });
+
+    await ProjectUserModel.create({
+      workspace: parseInt(workspaceId),
+      project: project.id,
+      role: UserRoles.OWNER,
+      user: userId,
+    });
 
     res.status(201).json({
-      // project,
+      project,
       message: "Project created",
     });
   } catch (error) {

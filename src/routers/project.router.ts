@@ -6,6 +6,6 @@ import { createProjectSchema } from "../middlewares/schemas/createProject.schema
 const router = Router();
 
 // /api/v1/project
-router.post("", validate(createProjectSchema), createProject);
+router.post("/:workspaceId", validate(createProjectSchema), createProject);
 
 export default router;
