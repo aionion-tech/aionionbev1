@@ -31,3 +31,37 @@ export const createWorkspace = async (
     next(error);
   }
 };
+
+export const getWorkspaces = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { userId } = req;
+
+    const userWorkspaces = await WorkspaceUserModel.findAll({
+      where: {
+        user: userId,
+      },
+      include: [
+        {
+          model: WorkspaceModel,
+          as: "WorkspaceClass",
+        },
+      ],
+      raw: true,
+      nest: true,
+    });
+
+    console.log(userWorkspaces);
+
+    res.status(201).json({
+      userWorkspaces: userWorkspaces.map(
+        (workspace) => workspace["WorkspaceClass"]
+      ),
+    });
+  } catch (error) {
+    next(error);
+  }
+};

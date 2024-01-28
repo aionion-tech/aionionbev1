@@ -43,3 +43,25 @@ export const createProject = async (
     next(error);
   }
 };
+
+export const getProjects = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { workspaceId } = req.params;
+
+    const projects = await ProjectModel.findAll({
+      where: {
+        workspace: parseInt(workspaceId),
+      },
+    });
+
+    return res.status(200).json({
+      projects,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

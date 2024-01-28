@@ -91,9 +91,15 @@ export const signin = async (
       );
     });
 
+    const workspace = await WorkspaceUserModel.findOne({
+      where: { user: user.id },
+    });
+
     res.status(200).json({
       accessToken,
       refreshToken,
+      workspaceId: workspace?.id,
+      userId: user.id,
       message: "Logged in successfully",
     });
   } catch (error) {

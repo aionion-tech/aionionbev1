@@ -47,4 +47,14 @@ const WorkspaceUserModel = WorkspaceUserClass.init(
   { tableName: "workspace_users", sequelize }
 );
 
+WorkspaceUserModel.belongsTo(WorkspaceModel, {
+  foreignKey: "workspace",
+});
+WorkspaceModel.hasMany(WorkspaceUserModel, {
+  foreignKey: "workspace",
+});
+
+WorkspaceUserModel.belongsTo(UserModel, { foreignKey: "user" });
+UserModel.hasMany(WorkspaceUserModel, { foreignKey: "user" });
+
 export { WorkspaceUserModel };

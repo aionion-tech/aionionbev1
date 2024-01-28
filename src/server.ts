@@ -5,8 +5,10 @@ dotenv.config();
 import { envConfig } from "./config";
 import router from "./routers";
 import { rootError } from "./middlewares/rootError.middleware";
+import cors from "cors";
 
 const app = express();
+app.use(cors());
 
 app.use(express.json());
 

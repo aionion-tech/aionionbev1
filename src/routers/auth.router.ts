@@ -9,7 +9,7 @@ const router = Router();
 // /api/v1/auth/signup
 router.post("/signup", validate(signupSchema), signup);
 
-// /api/v1/auth/login
+// /api/v1/auth/signin
 router.post("/signin", validate(signinSchema), signin);
 
 // /api/v1/auth/verify
