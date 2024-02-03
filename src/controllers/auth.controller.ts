@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 import { UserModel } from "../models/User.model";
 import { WorkspaceModel } from "../models/Workspace.model";
@@ -6,6 +6,7 @@ import { ProjectModel } from "../models/Project.model";
 import { DatasetModel } from "../models/Dataset.model";
 import { WorkspaceUserModel } from "../models/WorkspaceUser.model";
 import { ProjectUserModel } from "../models/ProjectUser.model";
+import { envConfig } from "../config";
 
 export const signup = async (
   req: Request,
@@ -59,12 +60,12 @@ export const signin = async (
       });
     }
 
-    const accessToken = await new Promise((resolve, reject) => {
+    const accessToken: string = await new Promise((resolve, reject) => {
       jwt.sign(
         { id: user.id },
-        process.env.JWT_SECRET!,
+        envConfig.jwt.JWT_SECRET!,
         {
-          expiresIn: "1d",
+          expiresIn: "12h",
         },
         (err, token) => {
           if (err) {
@@ -75,12 +76,14 @@ export const signin = async (
       );
     });
 
-    const refreshToken = await new Promise((resolve, reject) => {
+    const accessTokenExpiresIn = (jwt.decode(accessToken) as JwtPayload).exp;
+
+    const refreshToken: string = await new Promise((resolve, reject) => {
       jwt.sign(
         { id: user.id },
-        process.env.JWT_SECRET!,
+        envConfig.jwt.JWT_SECRET!,
         {
-          expiresIn: "7d",
+          expiresIn: "12h",
         },
         (err, token) => {
           if (err) {
@@ -91,6 +94,8 @@ export const signin = async (
       );
     });
 
+    const refreshTokenExpiresIn = (jwt.decode(refreshToken) as JwtPayload).exp;
+
     const workspace = await WorkspaceUserModel.findOne({
       where: { user: user.id },
     });
@@ -98,6 +103,8 @@ export const signin = async (
     res.status(200).json({
       accessToken,
       refreshToken,
+      accessTokenExpiresIn,
+      refreshTokenExpiresIn,
       workspaceId: workspace?.id,
       userId: user.id,
       message: "Logged in successfully",
@@ -107,29 +114,48 @@ export const signin = async (
   }
 };
 
-export const verifyToken = async (
+export const refreshToken = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
+  const { refreshToken } = req.body;
+
   try {
-    const token = req.headers.authorization?.split("Bearer ")[1];
-
-    if (!token) {
+    if (!refreshToken) {
       return res.status(401).json({
-        message: "Unauthorized",
+        message: "Refresh token required",
       });
     }
 
-    const payload = jwt.verify(token, process.env.JWT_SECRET!);
-
-    if (!payload) {
-      return res.status(401).json({
-        message: "Unauthorized",
-      });
+    let decoded;
+    try {
+      decoded = jwt.verify(refreshToken, envConfig.jwt.JWT_SECRET!);
+    } catch (error) {
+      return res.status(401).json({ message: "Invalid refresh token" });
     }
 
-    res.status(200).json(payload);
+    const userId = decoded.id;
+
+    const newAccessToken = jwt.sign({ id: userId }, envConfig.jwt.JWT_SECRET, {
+      expiresIn: "12h",
+    });
+
+    const accessTokenExpiresIn = (jwt.decode(newAccessToken) as JwtPayload).exp;
+
+    const newRefreshToken = jwt.sign({ id: userId }, envConfig.jwt.JWT_SECRET, {
+      expiresIn: "12h",
+    });
+
+    const refreshTokenExpiresIn = (jwt.decode(newRefreshToken) as JwtPayload)
+      .exp;
+
+    res.status(200).json({
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+      accessTokenExpiresIn,
+      refreshTokenExpiresIn,
+    });
   } catch (error) {
     next(error);
   }
@@ -205,6 +231,30 @@ export const verifyPermissions = async (
 
     res.status(200).json({
       message: "Authorized",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const encodeJwt = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { email } = req.body;
+
+    const user = await UserModel.findOne({ where: { email } });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "User not found",
+      });
+    }
+
+    const token = jwt.sign({ id: user.email }, envConfig.jwt.JWT_SECRET, {
+      expiresIn: "10m",
     });
   } catch (error) {
     next(error);

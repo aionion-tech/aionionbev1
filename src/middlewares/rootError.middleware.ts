@@ -14,7 +14,8 @@ export const rootError = (
   res: Response,
   next: NextFunction
 ) => {
-  if (process.env.NODE_ENV === "development") console.log(err);
+  // if (process.env.NODE_ENV === "development") console.log(err);
+  console.log(err);
 
   if (isZodError(err)) {
     return res.status(422).json({
@@ -29,6 +30,6 @@ export const rootError = (
   }
 
   res.status(500).json({
-    message: "Something went wrong",
+    message: err.message,
   });
 };

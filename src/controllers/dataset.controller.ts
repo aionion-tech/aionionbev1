@@ -42,7 +42,6 @@ export const createDataset = async (
       message: "Dataset created",
     });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };

@@ -54,8 +54,6 @@ export const getWorkspaces = async (
       nest: true,
     });
 
-    console.log(userWorkspaces);
-
     res.status(201).json({
       userWorkspaces: userWorkspaces.map(
         (workspace) => workspace["WorkspaceClass"]
