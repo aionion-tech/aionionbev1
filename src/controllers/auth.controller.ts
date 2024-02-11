@@ -25,7 +25,6 @@ export const signup = async (
     }
 
     const newUser = await UserModel.create({
-      username,
       password,
       email,
     });

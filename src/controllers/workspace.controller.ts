@@ -55,9 +55,7 @@ export const getWorkspaces = async (
     });
 
     res.status(201).json({
-      userWorkspaces: userWorkspaces.map(
-        (workspace) => workspace["WorkspaceClass"]
-      ),
+      data: userWorkspaces.map((workspace) => workspace["WorkspaceClass"]),
     });
   } catch (error) {
     next(error);

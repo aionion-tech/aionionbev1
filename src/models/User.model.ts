@@ -5,7 +5,6 @@ import * as bcrypt from "bcryptjs";
 
 class UserClass extends Model<User> implements User {
   public id!: number;
-  public username!: string;
   public email!: string;
   public password!: string;
 
@@ -21,10 +20,6 @@ const UserModel = UserClass.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-    },
-    username: {
-      type: DataTypes.STRING,
-      allowNull: true,
     },
     email: {
       type: DataTypes.STRING,

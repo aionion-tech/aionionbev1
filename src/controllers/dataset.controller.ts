@@ -3,6 +3,29 @@ import { DatasetModel } from "../models/Dataset.model";
 import { ProjectUserModel } from "../models/ProjectUser.model";
 import { WorkspaceUserModel } from "../models/WorkspaceUser.model";
 
+export const getDatasets = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { workspaceId, projectId } = req.params;
+
+    const datasets = await DatasetModel.findAll({
+      where: {
+        workspace: parseInt(workspaceId),
+        project: parseInt(projectId),
+      },
+    });
+
+    return res.status(200).json({
+      data: datasets,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const createDataset = async (
   req: Request,
   res: Response,

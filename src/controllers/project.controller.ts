@@ -59,7 +59,7 @@ export const getProjects = async (
     });
 
     return res.status(200).json({
-      projects,
+      data: projects,
     });
   } catch (error) {
     next(error);
