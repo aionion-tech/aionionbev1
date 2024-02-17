@@ -5,13 +5,19 @@ const testEnvConfig = {
     database: "aionionv1_test",
     password: "Hello123",
     port: parseInt("5432"),
-    uri: "postgres://postgres:Hello123@localhost:5432/aionionv1_test",
+    uri: process.env.DB_URI,
   },
   jwt: {
     JWT_SECRET: "whatever",
   },
   SERVER: {
     PORT: process.env.PORT || 3000,
+  },
+
+  GCP: {
+    GCP_PROJECT_ID: process.env.GCP_PROJECT_ID,
+    GCP_BUCKET_NAME: process.env.GCP_BUCKET_NAME,
+    GCP_KEY: process.env.GCP_KEY,
   },
 };
 
@@ -22,13 +28,18 @@ const developmentEnvConfig = {
     database: "aionionv1_dev",
     password: "Hello123",
     port: parseInt("5432"),
-    uri: "postgres://postgres:Hello123@localhost:5432/aionionv1_dev",
+    uri: process.env.DB_URI,
   },
   jwt: {
     JWT_SECRET: "whatever",
   },
   SERVER: {
     PORT: process.env.PORT || 3000,
+  },
+  GCP: {
+    GCP_PROJECT_ID: process.env.GCP_PROJECT_ID,
+    GCP_BUCKET_NAME: process.env.GCP_BUCKET_NAME,
+    GCP_KEY: process.env.GCP_KEY,
   },
 };
 
@@ -38,14 +49,19 @@ const productionConfig = {
     host: process.env.DB_HOST,
     database: process.env.DB_NAME,
     password: process.env.DB_PASSWORD,
-    port: parseInt(process.env.DB_PORT as string),
-    uri: process.env.DB_URI as string,
+    port: parseInt(process.env.DB_PORT),
+    uri: process.env.DB_URI,
   },
   jwt: {
     JWT_SECRET: process.env.JWT_SECRET,
   },
   SERVER: {
     PORT: process.env.PORT,
+  },
+  GCP: {
+    GCP_PROJECT_ID: process.env.GCP_PROJECT_ID,
+    GCP_BUCKET_NAME: process.env.GCP_BUCKET_NAME,
+    GCP_KEY: process.env.GCP_KEY,
   },
 };
 
