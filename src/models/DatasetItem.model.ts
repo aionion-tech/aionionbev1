@@ -72,7 +72,7 @@ const DatasetItemModel = DatasetItemClass.init(
       allowNull: false,
     },
   },
-  { tableName: "datasetItems", sequelize }
+  { tableName: "dataset_items", sequelize }
 );
 
 export { DatasetItemModel };

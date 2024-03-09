@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { DatasetModel } from "../models/Dataset.model";
 import { ProjectUserModel } from "../models/ProjectUser.model";
 import { WorkspaceUserModel } from "../models/WorkspaceUser.model";
+import { DatasetSettingsModel } from "../models/DatasetSettings.model";
 
 export const getDatasets = async (
   req: Request,
@@ -60,8 +61,14 @@ export const createDataset = async (
       project: parseInt(projectId),
     });
 
+    const datasetSettings = await DatasetSettingsModel.create({
+      dataset: dataset.id,
+      ontology: JSON.stringify({ name: "", description: "", labels: [] }),
+    });
+
     res.status(201).json({
       dataset,
+      datasetSettings,
       message: "Dataset created",
     });
   } catch (error) {

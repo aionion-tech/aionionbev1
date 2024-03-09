@@ -4,6 +4,7 @@ import workspaceRouter from "./workspace.router";
 import projectRouter from "./project.router";
 import datasetRouter from "./dataset.router";
 import datasetItemRouter from "./datasetItem.router";
+import datasetSettingsRouter from "./datasetSettings.router";
 import { auth } from "../middlewares/auth.middleware";
 
 const router = Router();
@@ -19,6 +20,9 @@ router.use("/project", auth, projectRouter);
 
 // /api/v1/dataset
 router.use("/dataset", auth, datasetRouter);
+
+// /api/v1/datasetsettings
+router.use("/datasetsettings", auth, datasetSettingsRouter);
 
 // /api/v1/datasetitem
 router.use("/datasetitem", datasetItemRouter);

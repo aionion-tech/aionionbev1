@@ -6,6 +6,7 @@ declare global {
       workspaceId?: number;
       projectId?: number;
       datasetId?: number;
+      datasetSettingsId?: number;
       userId?: number;
       file?: any;
     }

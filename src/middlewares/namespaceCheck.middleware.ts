@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { WorkspaceUserModel } from "../models/WorkspaceUser.model";
 import { ProjectUserModel } from "../models/ProjectUser.model";
 import { DatasetModel } from "../models/Dataset.model";
+import { DatasetSettingsModel } from "../models/DatasetSettings.model";
 
 export const namespaceCheck = async (
   req: Request,
@@ -10,7 +11,7 @@ export const namespaceCheck = async (
 ) => {
   try {
     const { userId } = req;
-    const { workspaceId, projectId, datasetId } = req.params;
+    const { workspaceId, projectId, datasetId, datasetSettingsId } = req.params;
 
     if (workspaceId) {
       const workspaceUser = await WorkspaceUserModel.findOne({
@@ -48,6 +49,18 @@ export const namespaceCheck = async (
       if (!dataset) throw new Error("Dataset not found");
 
       req.datasetId = parseInt(datasetId);
+    }
+
+    if (datasetSettingsId) {
+      const datasetSettings = await DatasetSettingsModel.findOne({
+        where: {
+          id: parseInt(datasetSettingsId),
+        },
+      });
+
+      if (!datasetSettings) throw new Error("Dataset settings not found");
+
+      req.datasetSettingsId = parseInt(datasetSettingsId);
     }
 
     next();

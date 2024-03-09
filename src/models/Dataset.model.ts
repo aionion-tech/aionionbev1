@@ -7,6 +7,7 @@ import { ProjectModel } from "./Project.model";
 class DatasetClass extends Model<Dataset> implements Dataset {
   public id!: number;
   public name!: string;
+  public description!: string;
   public workspace!: number;
   public project!: number;
 
@@ -24,6 +25,10 @@ const DatasetModel = DatasetClass.init(
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     workspace: {
       type: DataTypes.INTEGER,
