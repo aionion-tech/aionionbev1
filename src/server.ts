@@ -3,9 +3,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { envConfig } from "./config";
-import router from "./routers";
-import { rootError } from "./middlewares/rootError.middleware";
 import cors from "cors";
+import router from "./routers";
 
 const app = express();
 app.use(cors());
@@ -15,10 +14,8 @@ app.use(express.json());
 app.use("/api/v1", router);
 
 app.get("/echo", async (req: Request, res: Response) => {
-  res.status(200).send("Hey All!");
+  res.status(200).send("Hey!");
 });
-
-app.use(rootError);
 
 app.listen(envConfig.SERVER.PORT, async () => {
   console.log(
